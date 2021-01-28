@@ -1,7 +1,6 @@
 package com.Connect5Client;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import java.util.List;
 import java.util.UUID;
 
 public class Game {
@@ -11,6 +10,25 @@ public class Game {
     public String turn;
     public Player player1;
     public Player player2;
+    public List<String> colours;
+    public String winner;
+
+    public String getWinner() {
+        return winner;
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner;
+    }
+
+    public List<String> getColours() {
+        return colours;
+    }
+
+    public void setColours(List<String> colours) {
+        this.colours = colours;
+    }
+
 
     public UUID getGameId() {
         return gameId;

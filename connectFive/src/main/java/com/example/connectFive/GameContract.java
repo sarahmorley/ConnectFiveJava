@@ -1,5 +1,6 @@
 package com.example.connectFive;
 
+import java.util.List;
 import java.util.UUID;
 
 public class GameContract {
@@ -9,10 +10,29 @@ public class GameContract {
     public String turn;
     public Player player1;
     public Player player2;
+    public String[] colours;
+    public String winner;
+
+    public String getWinner() {
+        return winner;
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner;
+    }
+
+    public String[] getColours() {
+        return colours;
+    }
+
+    public void setColours(String[] colours) {
+        this.colours = colours;
+    }
 
     public String[][] getBoard() {
         return board;
     }
+
     public void setBoard(String[][] board) {
         this.board = board;
     }
@@ -49,11 +69,8 @@ public class GameContract {
         this.player2 = player2;
     }
 
-    public String getTurn() {
-        return turn;
-    }
+    public String getTurn() { return turn; }
 
-    public void setTurn(String turn){
-        this.turn = turn;
-    }
+    public void setTurn(String turn){ this.turn = turn; }
+
 }

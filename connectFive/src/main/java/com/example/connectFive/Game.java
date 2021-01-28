@@ -1,7 +1,7 @@
 package com.example.connectFive;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import jdk.internal.org.objectweb.asm.ClassReader;
+
+import java.util.*;
 
 public class Game {
 
@@ -21,7 +21,7 @@ public class Game {
         //If there is a game with only one player add the newPlayer to this game
         //Else create a new game and add the player
         GameContract game = new GameContract();
-
+        String[] colours = new String[2];
         for (Map.Entry<UUID, GameContract> entry : gameMap.entrySet()){
             UUID key = entry.getKey();
             GameContract CreatedGame = entry.getValue();
@@ -30,6 +30,10 @@ public class Game {
                 CreatedGame.setGameStatus(GameStatus.TWOPLAYERGAME);
                 CreatedGame.player2.setPlayerId(newPlayer.getPlayerId());
                 CreatedGame.player2.setColour(newPlayer.getColour());
+                CreatedGame.setTurn(CreatedGame.getPlayer1().getColour());
+                colours[0] = CreatedGame.getPlayer1().getColour();
+                colours[1] =newPlayer.getColour();
+                CreatedGame.setColours(colours);
                 return CreatedGame;
             }
         }
@@ -37,17 +41,17 @@ public class Game {
         return game;
     }
 
+
     public GameContract CreateNewGame(String playerId, String colour, GameContract game) {
-        String[][] board = new String[6][9];
+        String[][] board = new String[Rows][Cols];
         Player player = new Player();
         player.setPlayerId(playerId);
         player.setColour(colour);
-
         game.setGameId(UUID.randomUUID());
         game.setPlayer1(player);
         game.setGameStatus(GameStatus.CREATEDWITHONEPLAYER);
-        game.setTurn(playerId);
         game.setBoard(board);
+
         this.gameMap.put(game.gameId, game);
         return game;
     }
@@ -86,17 +90,24 @@ public class Game {
         }
 
         Boolean win = CheckWin(game.getBoard(), coordinates, turn.getColour());
-        if (win.equals(true))
+        if (win.equals(true)) {
             game.setGameStatus(GameStatus.COMPLETED);
-        //else
-            //Change turn
+            game.setWinner(game.getTurn());
+        }
+        else
+            ChangeTurn(game);
         return game;
     }
 
     public void ChangeTurn(GameContract game){
-        String currentTurn = game.getTurn();
-
+        String[] gameColours = game.getColours();
+        if (gameColours[0].equals(game.getTurn()))
+            game.setTurn(gameColours[1]);
+        else if (gameColours[1].equals(game.getTurn()))
+            game.setTurn(gameColours[0]);
     }
+
+
 
     public int[] AddTurn(int turn, String[][] board, String colour){
         int[] coordinates = new int[2];
@@ -156,7 +167,7 @@ public class Game {
 
     public Boolean CheckForHorizontalWin (String[][] board, int row, int col, String checkValue) {
         int counterH = 1;
-        for (int i = 0; i <=4; i++)
+        for (int i = 1; i <=4; i++)
         {
             try {
                 if (board[row][col + i] != null && board[row][col + i].equals(checkValue))
@@ -171,7 +182,7 @@ public class Game {
         if (counterH ==4)
             return true;
 
-        for (int i = 0; i <=4; i++)
+        for (int i = 1; i <=4; i++)
         {
             try {
                 if (board[row][col - i] != null && board[row][col - i].equals(checkValue)) {

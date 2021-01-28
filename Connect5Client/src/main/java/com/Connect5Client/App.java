@@ -1,12 +1,7 @@
 package com.Connect5Client;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.JsonPath;
 import okhttp3.*;
 import org.json.JSONException;
-import org.json.JSONObject;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,34 +26,45 @@ public class App
 
 
     public static void main( String[] args ) throws IOException, JSONException {
-       /* Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Please choose a player ID");
         String playerId = scanner.nextLine();
-        System.out.println("Please choose a colour");
-        String colour = scanner.nextLine();*/
-        String playerId = "22";
-        String colour = "red";
+        System.out.println("Please choose a letter to represent your tile colour");
+        String colour = scanner.nextLine();
+        //String playerId = "66";
+        //String colour = "r";
         Game game = ConnectToGame(playerId, colour);
-        System.out.print(game);
         Boolean playing = true;
-        if(game.getGameStatus().equals("COMPLETED"))
-             playing = false;
         while (playing) {
             //poll the server to see if its my turn - GET
             game = PollGame(game.getGameId(), game);
-            String turn = game.getTurn();
-            if (game.getTurn().equals(playerId)) {
-                game = playTurn(game.getGameId(), 2, colour, game);
+            if(game.getGameStatus().equals("CREATEDWITHONEPLAYER"))
+                System.out.println("Waiting for another player to join.");
+            else if(game.getGameStatus().equals("COMPLETED")){
+                System.out.println("The game is over. The winner is " + game.getWinner());
+                break;
+            }
+            if (game.getTurn() != null && game.getTurn().equals(colour)) {
                 DisplayBoard(game.getBoard());
-                if(game.getGameStatus().equals("COMPLETED"))
+                System.out.println("Play your turn");
+                int turn = Integer.parseInt(scanner.nextLine());
+                while (turn < 0 || turn > Cols){
+                    System.out.println("You must play a turn between 1 and 9: Try Again");
+                    turn = Integer.parseInt(scanner.nextLine());
+                }
+                game = playTurn(game.getGameId(), turn, colour, game);
+                DisplayBoard(game.getBoard());
+                if(game.getGameStatus().equals("COMPLETED")){
+                    System.out.println("The game is over. The winner is " + game.getWinner());
                     playing = false;
+                }
             }
         }
 
     }
     public static Game ConnectToGame(String playerId, String colour) throws IOException, JSONException {
         Game game = new Game();
-        String bodyString = "{\r\n    \"playerId\" : \"" +playerId + "\",\r\n    \"colour\" : \"" +colour + "\"\r\n}";
+        String bodyString = "{\r\n    \"playerId\" : \"" + playerId + "\",\r\n    \"colour\" : \"" +colour + "\"\r\n}";
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         MediaType mediaType = MediaType.parse("application/json");
@@ -104,7 +110,7 @@ public class App
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         Request request = new Request.Builder()
-                .url("http://localhost:8002/game/"+ gameId.toString())
+                .url("http://localhost:8002/game/" + gameId.toString())
                 .method("GET", null)
                 .addHeader("Content-Type", "application/json")
                 .build();
