@@ -1,6 +1,5 @@
-package com.example.connectFive;
+package com.example.connectFive.contracts;
 
-import java.util.List;
 import java.util.UUID;
 
 public class GameContract {
@@ -72,5 +71,4 @@ public class GameContract {
     public String getTurn() { return turn; }
 
     public void setTurn(String turn){ this.turn = turn; }
-
 }

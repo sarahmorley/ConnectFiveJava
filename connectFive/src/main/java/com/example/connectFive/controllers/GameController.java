@@ -1,10 +1,11 @@
-package com.example.connectFive;
-
+package com.example.connectFive.controllers;
+import com.example.connectFive.Game;
+import com.example.connectFive.contracts.GameContract;
+import com.example.connectFive.contracts.Player;
+import com.example.connectFive.contracts.Turn;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.DataInput;
 import java.util.UUID;
 
 @RestController

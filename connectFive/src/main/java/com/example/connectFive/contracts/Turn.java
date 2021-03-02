@@ -1,4 +1,4 @@
-package com.example.connectFive;
+package com.example.connectFive.contracts;
 
 public class Turn {
     private int turn;

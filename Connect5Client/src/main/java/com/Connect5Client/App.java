@@ -11,9 +11,8 @@ import java.util.concurrent.TimeUnit;
 
 public class App
 {
-
-    public static int Rows = 6;
-    public static int Cols = 9;
+    public static final int Rows = 6;
+    public static final int Cols = 9;
     private static ObjectMapper objectMapper = new ObjectMapper();
     private static URL url;
     static {
@@ -24,19 +23,15 @@ public class App
         }
     }
 
-
     public static void main( String[] args ) throws IOException, JSONException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please choose a player ID");
         String playerId = scanner.nextLine();
         System.out.println("Please choose a letter to represent your tile colour");
         String colour = scanner.nextLine();
-        //String playerId = "66";
-        //String colour = "r";
         Game game = ConnectToGame(playerId, colour);
         Boolean playing = true;
         while (playing) {
-            //poll the server to see if its my turn - GET
             game = PollGame(game.getGameId(), game);
             if(game.getGameStatus().equals("CREATEDWITHONEPLAYER"))
                 System.out.println("Waiting for another player to join.");
@@ -53,6 +48,8 @@ public class App
                     turn = Integer.parseInt(scanner.nextLine());
                 }
                 game = playTurn(game.getGameId(), turn, colour, game);
+                if(game.getGameStatus().equals("FULLCOL"))
+                    System.out.println("That column is already full. You lose a turn");
                 DisplayBoard(game.getBoard());
                 if(game.getGameStatus().equals("COMPLETED")){
                     System.out.println("The game is over. The winner is " + game.getWinner());
@@ -60,8 +57,8 @@ public class App
                 }
             }
         }
-
     }
+
     public static Game ConnectToGame(String playerId, String colour) throws IOException, JSONException {
         Game game = new Game();
         String bodyString = "{\r\n    \"playerId\" : \"" + playerId + "\",\r\n    \"colour\" : \"" +colour + "\"\r\n}";
@@ -81,7 +78,6 @@ public class App
             System.out.println("You have succesfully joined a game");
         }
         return game;
-
     }
 
     public static Game playTurn(UUID gameId, int turn, String colour, Game game) throws IOException {
@@ -121,7 +117,6 @@ public class App
         }
         return game;
     }
-
 
     public static void DisplayBoard(String[][] board) {
         for (int i = 0; i < Rows; i++)

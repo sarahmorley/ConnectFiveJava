@@ -1,4 +1,4 @@
-package com.example.connectFive;
+package com.example.connectFive.contracts;
 
 public class Player {
     private String playerId;

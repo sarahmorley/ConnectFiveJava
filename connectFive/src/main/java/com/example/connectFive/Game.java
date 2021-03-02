@@ -1,12 +1,16 @@
 package com.example.connectFive;
-import jdk.internal.org.objectweb.asm.ClassReader;
+import com.example.connectFive.contracts.GameContract;
+import com.example.connectFive.contracts.GameStatus;
+import com.example.connectFive.contracts.Player;
+import com.example.connectFive.contracts.Turn;
 
 import java.util.*;
 
 public class Game {
 
-    public static int Rows = 6;
-    public static int Cols = 9;
+    public static final int Rows = 6;
+    public static final int Cols = 9;
+    public static final int WinCount = 5;
     public static HashMap<UUID, GameContract> gameMap = new HashMap<UUID, GameContract>();
 
     public HashMap<UUID, GameContract> getGameMap() {
@@ -18,8 +22,6 @@ public class Game {
     }
 
     public GameContract AddPlayerToGame(Player newPlayer) {
-        //If there is a game with only one player add the newPlayer to this game
-        //Else create a new game and add the player
         GameContract game = new GameContract();
         String[] colours = new String[2];
         for (Map.Entry<UUID, GameContract> entry : gameMap.entrySet()){
@@ -40,7 +42,6 @@ public class Game {
         CreateNewGame(newPlayer.getPlayerId(), newPlayer.getColour(), game);
         return game;
     }
-
 
     public GameContract CreateNewGame(String playerId, String colour, GameContract game) {
         String[][] board = new String[Rows][Cols];
@@ -88,6 +89,9 @@ public class Game {
                 }
             }
         }
+        else { //column the player tried to enter into is already full
+            game.setGameStatus(GameStatus.FULLCOL);
+        }
 
         Boolean win = CheckWin(game.getBoard(), coordinates, turn.getColour());
         if (win.equals(true)) {
@@ -106,8 +110,6 @@ public class Game {
         else if (gameColours[1].equals(game.getTurn()))
             game.setTurn(gameColours[0]);
     }
-
-
 
     public int[] AddTurn(int turn, String[][] board, String colour){
         int[] coordinates = new int[2];
@@ -129,7 +131,6 @@ public class Game {
     }
 
     public Boolean CheckWin(String[][] board, int[] coordinates, String colour){
-        //Call all CheckMethods
         String checkValue = "[" + colour + "]";
         int row = coordinates[0];
         int col = coordinates[1];
@@ -147,7 +148,7 @@ public class Game {
 
     public Boolean CheckForVerticalWin(String[][] board, int row, int col, String checkValue) {
         int counterV = 1;
-        for (int i = 1; i <=4; i++)
+        for (int i = 1; i <= WinCount; i++)
         {
             try {
                 if(board[row + i] [col].equals(checkValue))
@@ -159,7 +160,7 @@ public class Game {
                 break;
             }
         }
-        if (counterV == 4)
+        if (counterV == WinCount)
             return true;
 
         return false;
@@ -167,7 +168,7 @@ public class Game {
 
     public Boolean CheckForHorizontalWin (String[][] board, int row, int col, String checkValue) {
         int counterH = 1;
-        for (int i = 1; i <=4; i++)
+        for (int i = 1; i <= WinCount; i++)
         {
             try {
                 if (board[row][col + i] != null && board[row][col + i].equals(checkValue))
@@ -179,15 +180,15 @@ public class Game {
                 break;
             }
         }
-        if (counterH ==4)
+        if (counterH == WinCount)
             return true;
 
-        for (int i = 1; i <=4; i++)
+        for (int i = 1; i <= WinCount; i++)
         {
             try {
                 if (board[row][col - i] != null && board[row][col - i].equals(checkValue)) {
                     counterH++;
-                    if (counterH ==4)
+                    if (counterH == WinCount)
                         return true;
                 }
             }
@@ -200,7 +201,7 @@ public class Game {
 
     public Boolean CheckForDiagonalLeftWin (String[][] board, int row, int col, String checkValue) {
         int counterDl = 1;
-        for (int i = 1; i <=4; i++)
+        for (int i = 1; i <= WinCount; i++)
         {
             try {
                 if (board[row - i][col + i] != null && board[row - i][col + i].equals(checkValue))
@@ -212,14 +213,14 @@ public class Game {
                 break;
             }
         }
-        if (counterDl ==4)
+        if (counterDl == WinCount)
             return true;
-        for (int i = 1; i <=4; i++)
+        for (int i = 1; i <= WinCount; i++)
         {
             try {
                 if (board[row +i][col - i] != null && board[row +i][col - i].equals(checkValue)){
                     counterDl++;
-                    if (counterDl == 4)
+                    if (counterDl == WinCount)
                         return true;
                 }
             }
@@ -232,7 +233,7 @@ public class Game {
 
     public Boolean CheckForDiagonalRightWin (String[][] board, int row, int col, String checkValue) {
         int counterDr = 1;
-        for (int i = 1; i <=4; i++)
+        for (int i = 1; i <= WinCount; i++)
         {
             try {
                 if (board[row + i][col + i]!= null && board[row + i][col + i].equals(checkValue))
@@ -244,14 +245,14 @@ public class Game {
                 break;
             }
         }
-        if (counterDr ==4)
+        if (counterDr == WinCount)
             return true;
-        for (int i = 1; i <=4; i++)
+        for (int i = 1; i <= WinCount; i++)
         {
             try {
                 if (board[row - i][col - i] != null && board[row - i][col - i].equals(checkValue)){
                     counterDr++;
-                    if (counterDr == 4)
+                    if (counterDr == WinCount)
                         return true;
                 }
             }
