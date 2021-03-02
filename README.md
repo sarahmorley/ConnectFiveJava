@@ -35,7 +35,7 @@ mvn clean package
 The built java jar can then be found in the target folder. CD to target and run it using the following command
 
 ```
-java -jar Connect5Client-0.0.1-SNAPSHOT.jar
+java -jar Connect5Client-1.0-SNAPSHOT.jar
 ```
 
 

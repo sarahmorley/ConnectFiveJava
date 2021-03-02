@@ -17,7 +17,7 @@ public class App
     private static URL url;
     static {
         try {
-            url = new URL("http://localhost:8002/game");
+            url = new URL("http://localhost:8080/game");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -90,7 +90,7 @@ public class App
         MediaType mediaType = MediaType.parse("application/json");
         RequestBody body = RequestBody.create(mediaType, bodyString);
         Request request = new Request.Builder()
-                .url("http://localhost:8002/game/"+ gameId.toString())
+                .url("http://localhost:8080/game/"+ gameId.toString())
                 .method("PATCH", body)
                 .addHeader("Content-Type", "application/json")
                 .build();
@@ -106,7 +106,7 @@ public class App
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         Request request = new Request.Builder()
-                .url("http://localhost:8002/game/" + gameId.toString())
+                .url("http://localhost:8080/game/" + gameId.toString())
                 .method("GET", null)
                 .addHeader("Content-Type", "application/json")
                 .build();
