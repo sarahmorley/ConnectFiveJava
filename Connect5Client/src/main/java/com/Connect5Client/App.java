@@ -23,7 +23,7 @@ public class App
         }
     }
 
-    public static void main( String[] args ) throws IOException, JSONException {
+    public static void main( String[] args ) throws IOException, JSONException, InterruptedException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please choose a player ID");
         String playerId = scanner.nextLine();
@@ -33,7 +33,7 @@ public class App
         Boolean playing = true;
         while (playing) {
             game = PollGame(game.getGameId(), game);
-            if(game.getGameStatus().equals("CREATEDWITHONEPLAYER"))
+            if(game.getGameStatus().equals("CREATED_WITH_ONE_PLAYER"))
                 System.out.println("Waiting for another player to join.");
             else if(game.getGameStatus().equals("COMPLETED")){
                 System.out.println("The game is over. The winner is " + game.getWinner());
@@ -48,13 +48,16 @@ public class App
                     turn = Integer.parseInt(scanner.nextLine());
                 }
                 game = playTurn(game.getGameId(), turn, colour, game);
-                if(game.getGameStatus().equals("FULLCOL"))
+                if(game.getGameStatus().equals("FULL_COL"))
                     System.out.println("That column is already full. You lose a turn");
                 DisplayBoard(game.getBoard());
                 if(game.getGameStatus().equals("COMPLETED")){
                     System.out.println("The game is over. The winner is " + game.getWinner());
                     playing = false;
                 }
+            }
+            else {
+                TimeUnit.SECONDS.sleep(3);
             }
         }
     }

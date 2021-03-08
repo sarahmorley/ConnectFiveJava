@@ -1,5 +1,5 @@
 package com.example.connectFive.contracts;
 
 public enum GameStatus {
-    CREATEDWITHONEPLAYER, TWOPLAYERGAME, COMPLETED, FULLCOL
+    CREATED_WITH_ONE_PLAYER, TWO_PLAYER_GAME, COMPLETED, FULL_COL
 }

@@ -29,7 +29,7 @@ public class Game {
             GameContract CreatedGame = entry.getValue();
             if (CreatedGame.getPlayer2() == null) {
                 CreatedGame.setPlayer2(newPlayer);
-                CreatedGame.setGameStatus(GameStatus.TWOPLAYERGAME);
+                CreatedGame.setGameStatus(GameStatus.TWO_PLAYER_GAME);
                 CreatedGame.player2.setPlayerId(newPlayer.getPlayerId());
                 CreatedGame.player2.setColour(newPlayer.getColour());
                 CreatedGame.setTurn(CreatedGame.getPlayer1().getColour());
@@ -50,7 +50,7 @@ public class Game {
         player.setColour(colour);
         game.setGameId(UUID.randomUUID());
         game.setPlayer1(player);
-        game.setGameStatus(GameStatus.CREATEDWITHONEPLAYER);
+        game.setGameStatus(GameStatus.CREATED_WITH_ONE_PLAYER);
         game.setBoard(board);
 
         this.gameMap.put(game.gameId, game);
@@ -90,7 +90,7 @@ public class Game {
             }
         }
         else { //column the player tried to enter into is already full
-            game.setGameStatus(GameStatus.FULLCOL);
+            game.setGameStatus(GameStatus.FULL_COL);
         }
 
         Boolean win = CheckWin(game.getBoard(), coordinates, turn.getColour());
